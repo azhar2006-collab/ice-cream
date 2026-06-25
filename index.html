@@ -1,10 +1,11 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mithas – More Than Ice Cream</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -19,126 +20,308 @@
     --muted: #6b6b6b;
     --white: #ffffff;
   }
+
+  /* FIX: smooth scrolling */
+  html { scroll-behavior: smooth; }
+
   body { font-family: "Inter", sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
-  nav { background: var(--navy); padding: 0 48px; display: flex; align-items: center; justify-content: space-between; height: 64px; position: sticky; top: 0; z-index: 100; }
-  .nav-logo { color: white; font-family: "Playfair Display", serif; font-size: 1.5rem; font-weight: 700; }
-  .nav-logo span { color: var(--gold); }
+
+  /* ── Navbar ── */
+  nav {
+    background: var(--navy);
+    padding: 0 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+  }
+  .nav-logo img { width: 95px; height: 50px; object-fit: contain; }
+
   .nav-links { display: flex; gap: 32px; list-style: none; }
-  .nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.5px; transition: color 0.2s; }
+  .nav-links a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
+    position: relative;
+    padding-bottom: 4px;
+  }
   .nav-links a:hover { color: var(--gold); }
-  .nav-cta { background: var(--gold); color: white; border: none; padding: 10px 22px; border-radius: 32px; font-size: 0.875rem; font-weight: 500; cursor: pointer; font-family: "Inter", sans-serif; transition: background 0.2s; }
+  /* FIX: active nav indicator */
+  .nav-links a.active { color: var(--gold); }
+  .nav-links a.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    border-radius: 1px;
+  }
+
+  .nav-cta { background: var(--gold); color: white; border: none; padding: 10px 22px; border-radius: 32px; font-size: 0.875rem; font-weight: 500; cursor: pointer; font-family: "Inter", sans-serif; transition: background 0.2s; white-space: nowrap; }
   .nav-cta:hover { background: #b07d20; }
+
+  /* Hamburger */
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+    background: none;
+    border: none;
+  }
+  .nav-hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: rgba(255,255,255,0.85);
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+
+  /* Mobile nav drawer */
+  .mobile-menu {
+    display: none;
+    flex-direction: column;
+    background: var(--navy);
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    padding: 24px 24px 32px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    gap: 0;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--gold); }
+  .mobile-menu .nav-cta { margin-top: 20px; width: 100%; text-align: center; padding: 14px; font-size: 0.95rem; }
+
+  /* ── Hero ── */
   .hero { width: 100%; overflow: hidden; }
+  /* FIX: removed overbright filter that blows out food photos */
   .hero img { width: 100%; display: block; max-height: 620px; object-fit: cover; object-position: center; }
+
+  /* ── Marquee ── */
   .marquee-strip { background: var(--navy); padding: 14px 0; overflow: hidden; white-space: nowrap; }
   .marquee-inner { display: inline-block; animation: marquee 22s linear infinite; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 500; color: var(--gold); }
   .marquee-inner span { margin: 0 40px; color: rgba(255,255,255,0.4); }
   @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+  /* ── Scroll reveal ── */
+  /* FIX: reveal animation wired up — starts hidden, JS adds .is-visible */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Shared section helpers ── */
   section { padding: 80px 48px; }
   .section-eyebrow { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 12px; }
   .section-title { font-family: "Playfair Display", serif; font-size: 2.8rem; font-weight: 700; line-height: 1.15; color: var(--navy); max-width: 560px; margin-bottom: 20px; }
   .section-body { font-size: 1rem; color: var(--muted); line-height: 1.8; max-width: 520px; }
 
-  /* Company Info Section */
-  .company-info {
-    background: var(--cream);
-    border-bottom: 1px solid var(--beige-mid);
+  /* ════════════════════════════════════
+     FLAVOURS SECTION
+     ════════════════════════════════════ */
+  .flavours { background: var(--beige); padding: 90px 0; }
+
+  .flavours-header {
+    padding: 0 60px 64px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
   }
-  .company-grid {
+
+  .flavour-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
+    min-height: 260px;
+    border-top: 1px solid #d4c4a8;
   }
-  .company-details {
-    font-size: 0.95rem;
-    line-height: 1.8;
-  }
-  .company-details h3 {
-    font-family: "Playfair Display", serif;
-    font-size: 1.6rem;
-    color: var(--navy);
-    margin-bottom: 16px;
-  }
-  .company-details p {
-    margin-bottom: 8px;
-    color: var(--muted);
-  }
-  .highlight { color: var(--navy); font-weight: 500; }
+  .flavour-row:last-child { border-bottom: 1px solid #d4c4a8; }
 
-  /* Flavours Section */
-  .flavours { background: var(--beige); }
-  .flavours-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 62px; flex-wrap: wrap; gap: 16px; }
-  .flavours-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
-
-  .flavour-card {
-    border-radius: 20px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
-    background: var(--beige-card);
-    border: 1px solid var(--beige-mid);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  }
-  .flavour-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 32px rgba(0,0,0,0.12);
-  }
-
-  .flavour-card-img {
-    width: 100%;
-    height: 150px;
-    overflow: hidden;
+  /* FIX: was "position: flex" (invalid) — should be position: relative */
+  .flavour-image-side {
     position: relative;
-    background: var(--beige-mid);
+    overflow: hidden;
+    min-height: 200px;
   }
-  .flavour-card-img img {
+  /* FIX: images were 50%/50% — corrected to fill the cell */
+  .flavour-image-side img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
     display: block;
-    transition: transform 0.4s ease;
+    transition: transform 0.6s ease;
   }
-  .flavour-card:hover .flavour-card-img img {
-    transform: scale(1.05);
-  }
-  .flavour-card-img::after {
-    content: '';
+  .flavour-row:hover .flavour-image-side img { transform: scale(1.04); }
+  /* FIX: overlay now anchors correctly because parent is position:relative */
+  .flavour-image-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.18) 0%, transparent 55%);
+    background: linear-gradient(135deg, rgba(13,31,92,0.18) 0%, transparent 60%);
     pointer-events: none;
   }
 
-  .flavour-info {
-    padding: 20px;
+  .flavour-text-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 14px 22px;
     background: var(--beige-card);
-    border-top: 1px solid var(--beige-mid);
+    position: relative;
   }
-  .flavour-name { font-family: "Playfair Display", serif; font-size: 1.15rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
-  .flavour-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
-  .flavour-tag {
+  .flavour-row:nth-child(even) .flavour-text-side { background: var(--beige-mid); }
+
+  .flavour-number {
+    font-family: "Playfair Display", serif;
+    font-size: 5rem;
+    font-weight: 900;
+    color: var(--gold);
+    opacity: 0.18;
+    line-height: 1;
+    margin-bottom: -10px;
+  }
+  .flavour-tag-pill {
     display: inline-block;
-    margin-top: 10px;
-    background: var(--beige-mid);
+    background: var(--navy);
+    color: var(--gold);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 18px;
+    width: fit-content;
+  }
+  .flavour-name-large {
+    font-family: "Playfair Display", serif;
+    font-size: 2.4rem;
+    font-weight: 700;
     color: var(--navy);
-    font-size: 0.7rem;
-    font-weight: 600;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .flavour-desc-long {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.85;
+    max-width: 380px;
+    margin-bottom: 28px;
+  }
+  /* FIX: was .flavour-detail-row in CSS but .flavour-details in HTML — unified to .flavour-details */
+  .flavour-details { display: flex; gap: 28px; flex-wrap: wrap; }
+  .flavour-detail { font-size: 0.75rem; color: var(--navy); font-weight: 500; letter-spacing: 0.5px; }
+  .flavour-detail span {
+    display: block;
+    font-size: 0.68rem;
+    color: var(--cream);
+    font-weight: 400;
     letter-spacing: 1px;
     text-transform: uppercase;
-    padding: 4px 10px;
-    border-radius: 20px;
-    border: 1px solid #d4c4a8;
+    margin-bottom: 2px;
   }
+  .explore-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--gold);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    margin-top: 28px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: "Inter", sans-serif;
+    padding: 0;
+  }
+  .explore-link svg { transition: transform 0.2s; }
+  .explore-link:hover svg { transform: translateX(5px); }
 
-  /* Rest of sections remain the same */
-  .about { background: var(--cream); display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
-  .about-visual { background: var(--navy); border-radius: 24px; height: 480px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 20px; }
-  .about-stats-row { display: flex; gap: 16px; }
-  .about-stat { background: rgba(255,255,255,0.1); border-radius: 12px; padding: 16px 24px; text-align: center; color: white; }
-  .about-stat-num { font-family: "Playfair Display", serif; font-size: 2.2rem; font-weight: 900; color: var(--gold); display: block; }
-  .about-stat-label { font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase; opacity: 0.6; }
+  .flavour-row.img-right .flavour-image-side { order: 2; }
+  .flavour-row.img-right .flavour-text-side  { order: 1; }
+
+  /* ════════════════════════════════════
+     OUR STORY SECTION
+     ════════════════════════════════════ */
+  .story-timeline-bar { background: var(--gold); height: 3px; width: 100%; }
+  .story-section { background: var(--navy); padding: 0; }
+
+  .story-hero {
+    padding: 100px 60px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: end;
+  }
+  .story-hero-text { padding-bottom: 80px; }
+
+  .story-eyebrow { font-size: 0.65rem; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 20px; }
+  .story-headline { font-family: "Playfair Display", serif; font-size: 3.4rem; font-weight: 900; color: #ffffff; line-height: 1.1; margin-bottom: 24px; }
+  .story-headline em { font-style: italic; color: var(--beige); }
+  .story-lead { font-size: 1.05rem; color: rgba(255,255,255,0.65); line-height: 1.9; max-width: 440px; margin-bottom: 40px; }
+  .story-founder-quote { border-left: 2px solid var(--gold); padding-left: 20px; }
+  .story-founder-quote blockquote { font-family: "Playfair Display", serif; font-size: 1.1rem; font-style: italic; color: var(--beige); line-height: 1.7; margin-bottom: 12px; }
+  .story-founder-name { font-size: 0.78rem; color: rgba(255,255,255,0.5); letter-spacing: 1px; text-transform: uppercase; font-weight: 500; }
+
+  .story-stat-tower { display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; overflow: hidden; }
+  .story-stat-block { padding: 32px 36px; border-bottom: 1px solid rgba(255,255,255,0.1); position: relative; }
+  .story-stat-block:last-child { border-bottom: none; }
+  .story-stat-block:nth-child(odd) { background: rgba(255,255,255,0.04); }
+  .story-stat-num { font-family: "Playfair Display", serif; font-size: 3rem; font-weight: 900; color: var(--gold); line-height: 1; margin-bottom: 4px; }
+  .story-stat-label { font-size: 0.8rem; color: rgba(255,255,255,0.55); letter-spacing: 1px; text-transform: uppercase; font-weight: 500; }
+  .story-stat-accent { position: absolute; right: 24px; top: 50%; transform: translateY(-50%); font-size: 1.8rem; opacity: 0.12; }
+
+  .story-milestones { padding: 80px 60px; border-top: 1px solid rgba(255,255,255,0.1); }
+  .milestones-eyebrow { font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 40px; }
+  .milestones-track { position: relative; display: flex; gap: 0; }
+  .milestones-track::before { content: ''; position: absolute; top: 18px; left: 0; right: 0; height: 1px; background: rgba(255,255,255,0.15); }
+  .milestone { flex: 1; padding-top: 48px; position: relative; padding-right: 16px; }
+  .milestone-dot { position: absolute; top: 10px; left: 0; width: 16px; height: 16px; background: var(--gold); border-radius: 50%; border: 3px solid var(--navy); box-shadow: 0 0 0 1px var(--gold); }
+  .milestone-year { font-family: "Playfair Display", serif; font-size: 1.2rem; font-weight: 700; color: var(--gold); margin-bottom: 6px; }
+  .milestone-title { font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.85); margin-bottom: 4px; }
+  .milestone-desc { font-size: 0.76rem; color: rgba(255,255,255,0.4); line-height: 1.6; }
+
+  .story-values { background: var(--beige); display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; position: relative; }
+  .story-values::before { content: ''; position: absolute; inset: 0; background: #d4c4a8; z-index: 0; }
+  .value-card { background: var(--beige); padding: 48px 40px; position: relative; z-index: 1; }
+  .value-icon { font-size: 2rem; margin-bottom: 20px; display: block; opacity: 0.7; }
+  .value-title { font-family: "Playfair Display", serif; font-size: 1.3rem; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+  .value-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.75; }
+
+  /* ── Process ── */
   .process { background: var(--navy); color: white; }
   .process .section-title { color: white; }
   .process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; margin-top: 52px; }
@@ -146,6 +329,8 @@
   .step-num { font-family: "Playfair Display", serif; font-size: 2.8rem; font-weight: 900; color: var(--gold); opacity: 0.35; display: block; margin-bottom: 14px; }
   .step-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 8px; color: white; }
   .step-desc { font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.7; }
+
+  /* ── Testimonials ── */
   .testimonials { background: var(--white); }
   .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
   .testimonial-card { background: var(--cream); border-radius: 20px; padding: 32px 28px; border: 1px solid #efe8da; }
@@ -153,6 +338,8 @@
   .testimonial-text { font-size: 0.93rem; line-height: 1.75; color: var(--text); margin-bottom: 20px; font-style: italic; }
   .testimonial-author { font-weight: 600; font-size: 0.85rem; color: var(--navy); }
   .testimonial-location { font-size: 0.78rem; color: var(--muted); }
+
+  /* ── CTA Banner ── */
   .cta-banner { background: var(--red); text-align: center; padding: 80px 48px; color: white; }
   .cta-banner .section-title { color: white; max-width: 680px; margin: 0 auto 12px; }
   .cta-banner .section-eyebrow { color: rgba(255,255,255,0.7); }
@@ -161,6 +348,8 @@
   .cta-btn:hover { transform: scale(1.03); }
   .cta-btn-outline { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.5); padding: 14px 40px; border-radius: 40px; font-size: 1rem; font-weight: 500; cursor: pointer; font-family: "Inter", sans-serif; margin: 0 8px; transition: border-color 0.2s; }
   .cta-btn-outline:hover { border-color: white; }
+
+  /* ── Footer ── */
   footer { background: #060e2e; color: rgba(255,255,255,0.6); padding: 60px 48px 32px; }
   .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
   .footer-brand { font-family: "Playfair Display", serif; font-size: 1.4rem; color: white; margin-bottom: 10px; }
@@ -173,36 +362,214 @@
   .footer-links a:hover { color: var(--gold); }
   .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; font-size: 0.76rem; }
   .footer-bottom-logo { color: white; font-family: "Playfair Display", serif; font-size: 1rem; }
-  @media (max-width: 900px) {
-    nav { padding: 0 20px; }
+
+
+  /* ══════════════════════════════════════
+     RESPONSIVE — Tablet (max 1024px)
+     ══════════════════════════════════════ */
+  @media (max-width: 1024px) {
+    .story-hero { gap: 40px; padding: 80px 40px 0; }
+    .story-headline { font-size: 2.8rem; }
+    .flavour-text-side { padding: 48px 40px; }
+    .process-steps { grid-template-columns: repeat(2, 1fr); }
+  }
+
+
+  /* ══════════════════════════════════════
+     RESPONSIVE — Mobile (max 768px)
+     ══════════════════════════════════════ */
+  @media (max-width: 768px) {
+
+    /* ── Navbar ── */
+    nav {
+      padding: 0 20px;
+      position: relative;
+    }
+
+    /* FIX: logo centered with flexbox instead of fragile magic-number right offset */
+    .nav-logo {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .nav-logo img { width: 110px; height: 58px; }
     .nav-links { display: none; }
+    .nav-cta { display: none; }
+
+    /* Hamburger pinned to right */
+    .nav-hamburger {
+      display: flex;
+      margin-left: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Sections ── */
     section { padding: 52px 20px; }
-    .company-grid, .about { grid-template-columns: 1fr; gap: 32px; }
-    .process-steps { grid-template-columns: 1fr 1fr; }
-    .testimonials-grid { grid-template-columns: 1fr; }
-    .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
-    .section-title { font-size: 2rem; }
-    .about-visual { height: 300px; }
+
+    /* ── Hero ── */
+    .hero img { max-height: 300px; object-position: center top; }
+
+    /* ── Marquee ── */
+    .marquee-inner { font-size: 0.7rem; }
+
+    /* ── Flavours ── */
+    .flavours { padding: 60px 0; }
+    .flavours-header { padding: 0 20px 40px; flex-direction: column; align-items: flex-start; gap: 20px; }
+    .flavours-header .nav-cta { width: 100%; text-align: center; padding: 14px; border-radius: 12px; }
+    .section-title { font-size: 1.9rem; }
+    .section-body { font-size: 0.9rem; }
+
+    .flavour-row {
+      grid-template-columns: 1fr 1fr;
+      min-height: 200px;
+    }
+    /* Preserve img-right alternation */
+    .flavour-row.img-right .flavour-image-side { order: 2 !important; }
+    .flavour-row.img-right .flavour-text-side  { order: 1 !important; }
+    .flavour-row:not(.img-right) .flavour-image-side { order: 1 !important; }
+    .flavour-row:not(.img-right) .flavour-text-side  { order: 2 !important; }
+
+    .flavour-image-side { min-height: 190px; }
+    .flavour-image-side img { min-height: 190px; width: 100%; height: 100%; }
+    .flavour-text-side { padding: 16px 14px; }
+    .flavour-text-side::after { display: none; }
+    .flavour-number { font-size: 2.4rem; margin-bottom: -8px; }
+    .flavour-tag-pill { font-size: 0.5rem; padding: 4px 10px; margin-bottom: 8px; }
+    .flavour-name-large { font-size: 1.1rem; margin-bottom: 8px; }
+    .flavour-desc-long { display: none; }
+    /* FIX: matched to corrected class name .flavour-details */
+    .flavour-details { gap: 10px; padding: 12px 0; margin-bottom: 12px; }
+    .flavour-detail { font-size: 0.62rem; }
+    .flavour-detail span { font-size: 0.55rem; }
+    .explore-link { font-size: 0.65rem; margin-top: 0; }
+    .explore-link svg { width: 12px; height: 12px; }
+
+    /* ── Story ── */
+    .story-hero {
+      grid-template-columns: 1fr;
+      gap: 36px;
+      padding: 52px 20px 0;
+    }
+    .story-hero-text { padding-bottom: 0; }
+    .story-headline { font-size: 2rem; }
+    .story-lead { font-size: 0.95rem; max-width: 100%; }
+
+    .story-stat-tower {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .story-stat-block { border-right: 1px solid rgba(255,255,255,0.1); }
+    .story-stat-block:nth-child(even) { border-right: none; }
+    .story-stat-num { font-size: 2.2rem; }
+    .story-stat-accent { display: none; }
+
+    .story-milestones { padding: 48px 20px; }
+    .milestones-track {
+      flex-direction: column;
+      gap: 0;
+    }
+    .milestones-track::before {
+      top: 0; bottom: 0;
+      left: 7px; right: auto;
+      width: 1px; height: auto;
+    }
+    .milestone {
+      padding-top: 0;
+      padding-left: 32px;
+      padding-right: 0;
+      padding-bottom: 28px;
+    }
+    .milestone:last-child { padding-bottom: 0; }
+    .milestone-dot { top: 2px; left: 0; }
+
+    .story-values { grid-template-columns: 1fr; }
+    .value-card { padding: 36px 24px; }
+
+    /* ── Process ── */
+    .process { padding: 52px 20px; }
+    .process-steps { grid-template-columns: 1fr; gap: 16px; margin-top: 32px; }
+    .process-step { padding: 24px 20px; }
+
+    /* ── Testimonials ── */
+    .testimonials { padding: 52px 20px; }
+    .testimonials-grid { grid-template-columns: 1fr; gap: 16px; margin-top: 32px; }
+
+    /* ── CTA Banner ── */
+    .cta-banner { padding: 60px 20px; }
+    .cta-banner .section-title { font-size: 1.8rem; }
+    .cta-sub { font-size: 0.9rem; }
+    .cta-btn, .cta-btn-outline {
+      display: block;
+      width: 100%;
+      margin: 0 0 12px;
+      padding: 16px 20px;
+    }
+
+    /* ── Footer ── */
+    footer { padding: 48px 20px 28px; }
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    .footer-grid > div:first-child {
+      grid-column: 1 / -1;
+    }
+    .footer-bottom {
+      flex-direction: column;
+      gap: 10px;
+      text-align: center;
+    }
+  }
+
+  /* ══════════════════════════════════════
+     RESPONSIVE — Small Mobile (max 420px)
+     ══════════════════════════════════════ */
+  @media (max-width: 420px) {
+    .story-stat-tower { grid-template-columns: 1fr; }
+    .story-stat-block { border-right: none; }
+    .footer-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
+<!-- ── Navbar ── -->
 <nav>
-  <div class="nav-logo">Mithas<span>™</span></div>
+  <div class="nav-logo">
+    <img src="logo.png" alt="Mithas Logo">
+  </div>
   <ul class="nav-links">
     <li><a href="#flavours">Flavours</a></li>
     <li><a href="#about">Our Story</a></li>
     <li><a href="#process">Craftsmanship</a></li>
+    <!-- FIX: added id="stores" to the CTA banner section so this link works -->
     <li><a href="#stores">Find Us</a></li>
   </ul>
   <button class="nav-cta">Order Now</button>
+  <!-- FIX: added aria-expanded for screen readers -->
+  <button class="nav-hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
+<!-- Mobile Drawer -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#flavours" onclick="closeMobileMenu()">Flavours</a>
+  <a href="#about" onclick="closeMobileMenu()">Our Story</a>
+  <a href="#process" onclick="closeMobileMenu()">Craftsmanship</a>
+  <a href="#stores" onclick="closeMobileMenu()">Find Us</a>
+  <button class="nav-cta" onclick="closeMobileMenu()">Order Now</button>
+</div>
+
+<!-- ── Hero ── -->
 <div class="hero">
   <img src="mithas_hero_banner.png" alt="Mithas ice cream – Kesar Pista, Mango, and Chocolate served in premium glass bowls and waffle cones">
 </div>
 
+<!-- ── Marquee ── -->
 <div class="marquee-strip">
   <div class="marquee-inner">
     Made with Real Milk <span>✦</span> No Artificial Colours <span>✦</span> 50+ Flavours <span>✦</span> Pan India Delivery <span>✦</span> Premium Quality <span>✦</span> Cold-Pressed Ingredients <span>✦</span>
@@ -210,93 +577,224 @@
   </div>
 </div>
 
-
+<!-- ════════════════════
+     FLAVOURS
+     ════════════════════ -->
 <section class="flavours" id="flavours">
-  <div class="flavours-header">
+
+  <div class="flavours-header reveal">
     <div>
       <p class="section-eyebrow">Our Collection</p>
-      <h2 class="section-title">Flavours Rooted in India</h2>
-      <p class="section-body">Every scoop tells a story — of saffron fields in Kashmir, mango orchards in Alphonso country, and the finest pistachios from the hills.</p>
+      <h2 class="section-title">Flavours Rooted<br>in India</h2>
+      <p class="section-body">Every scoop tells a story — saffron from Kashmir, mangoes from Ratnagiri, pistachios from the Deccan hills.</p>
     </div>
-    <button class="nav-cta">View All Flavours</button>
+    <button class="nav-cta">View All 50+ Flavours</button>
   </div>
-  <div class="flavours-grid">
 
-    <!-- Kesar Pista -->
-    <div class="flavour-card">
-      <div class="flavour-card-img">
-        <img src="images.jpg" alt="Kesar Pista ice cream – saffron and pistachio scoops in premium bowl">
+  <!-- Row 1: text LEFT | image RIGHT -->
+  <div class="flavour-row img-right reveal">
+    <div class="flavour-text-side">
+      <div class="flavour-number">01</div>
+      <div class="flavour-tag-pill">Signature</div>
+      <h3 class="flavour-name-large">Kesar Pista</h3>
+      <p class="flavour-desc-long">Harvested saffron strands from the Pampore fields of Kashmir, steeped overnight in fresh cream, then folded through with slow-roasted Sicilian pistachios. Intensely golden, unmistakably Indian.</p>
+      <!-- FIX: changed class from flavour-detail-row to flavour-details (matches CSS) -->
+      <div class="flavour-details">
+        <div class="flavour-detail"><span>Origin</span>Kashmir Saffron</div>
+        <div class="flavour-detail"><span>Nut</span>Hand-roasted Pista</div>
+        <div class="flavour-detail"><span>Best with</span>Warm Gulab Jamun</div>
       </div>
-      <div class="flavour-info">
-        <div class="flavour-name">Kesar Pista</div>
-        <div class="flavour-desc">Saffron-infused cream swirled with roasted pistachios </div>
-        <div class="flavour-tag">Signature</div>
-      </div>
+      <button class="explore-link">Explore flavour <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
     </div>
-
-    
-    <!-- Dark Chocolate -->
-    <div class="flavour-card">
-      <div class="flavour-card-img">
-        <img src="images (1).jpg" alt="Rich Belgian dark chocolate ice cream with chocolate shards">
-      </div>
-      <div class="flavour-info">
-        <div class="flavour-name">Dark Chocolate</div>
-        <div class="flavour-desc">Belgian dark chocolate with chocolate chip clusters </div>
-        <div class="flavour-tag">Bestseller</div>
-      </div>
+    <div class="flavour-image-side">
+      <img src="images.jpg" alt="Kesar Pista ice cream">
+      <div class="flavour-image-overlay"></div>
     </div>
-    <!-- Alphonso Mango -->
-    <div class="flavour-card">
-      <div class="flavour-card-img">
-        <img src="images (3).jpg" alt="Alphonso Mango ice cream – vibrant golden scoop with fresh mango">
-      </div>
-      <div class="flavour-info">
-        <div class="flavour-name">Alphonso Mango</div>
-        <div class="flavour-desc">Pure Alphonso mangoes .</div>
-        <div class="flavour-tag">Seasonal</div>
-      </div>
-    </div>
-
-
-    <!-- Gulab Shahi -->
-    <div class="flavour-card">
-      <div class="flavour-card-img">
-        <img src="images (4).jpg" alt="Gulab Shahi rose and cardamom ice cream with rose petals">
-      </div>
-      <div class="flavour-info">
-        <div class="flavour-name">Gulab Shahi</div>
-        <div class="flavour-desc">Rose petals and cardamom in silky milk </div>
-        <div class="flavour-tag">Royal Edition</div>
-      </div>
-    </div>
-
   </div>
+
+  <!-- Row 2: image LEFT | text RIGHT -->
+  <div class="flavour-row reveal">
+    <div class="flavour-image-side">
+      <img src="images (1).jpg" alt="Dark Chocolate ice cream">
+      <div class="flavour-image-overlay"></div>
+    </div>
+    <div class="flavour-text-side">
+      <div class="flavour-number">02</div>
+      <div class="flavour-tag-pill">Bestseller</div>
+      <h3 class="flavour-name-large">Dark Chocolate</h3>
+      <p class="flavour-desc-long">Single-origin Belgian couverture at 72% cacao — no shortcuts. Dense, complex, and barely sweet. Finished with hand-broken chocolate clusters that shatter with every spoon.</p>
+      <div class="flavour-details">
+        <div class="flavour-detail"><span>Cacao</span>72% Belgian</div>
+        <div class="flavour-detail"><span>Texture</span>Fudge-dense</div>
+        <div class="flavour-detail"><span>Best with</span>Sea salt flakes</div>
+      </div>
+      <button class="explore-link">Explore flavour <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+    </div>
+  </div>
+
+  <!-- Row 3: text LEFT | image RIGHT -->
+  <div class="flavour-row img-right reveal">
+    <div class="flavour-text-side">
+      <div class="flavour-number">03</div>
+      <div class="flavour-tag-pill">Seasonal</div>
+      <h3 class="flavour-name-large">Alphonso Mango</h3>
+      <p class="flavour-desc-long">Pressed from the first harvest of Ratnagiri Alphonsos — the undisputed king of mangoes. No added sugar, no essence. The season, frozen and saved for you.</p>
+      <div class="flavour-details">
+        <div class="flavour-detail"><span>Variety</span>GI Ratnagiri</div>
+        <div class="flavour-detail"><span>Season</span>Mar – June</div>
+        <div class="flavour-detail"><span>Best with</span>Cardamom cookie</div>
+      </div>
+      <button class="explore-link">Explore flavour <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+    </div>
+    <div class="flavour-image-side">
+      <img src="images (3).jpg" alt="Alphonso Mango ice cream">
+      <div class="flavour-image-overlay"></div>
+    </div>
+  </div>
+
+  <!-- Row 4: image LEFT | text RIGHT -->
+  <div class="flavour-row reveal">
+    <div class="flavour-image-side">
+      <img src="images (4).jpg" alt="Gulab Shahi rose ice cream">
+      <div class="flavour-image-overlay"></div>
+    </div>
+    <div class="flavour-text-side">
+      <div class="flavour-number">04</div>
+      <div class="flavour-tag-pill">Royal Edition</div>
+      <h3 class="flavour-name-large">Gulab Shahi</h3>
+      <p class="flavour-desc-long">Dried rose petals from Pushkar, green cardamom cracked fresh each morning, and silky full-fat milk reduced over three hours. Delicate, floral, and imperial.</p>
+      <div class="flavour-details">
+        <div class="flavour-detail"><span>Roses</span>Pushkar Dried</div>
+        <div class="flavour-detail"><span>Spice</span>Green Cardamom</div>
+        <div class="flavour-detail"><span>Best with</span>Rose sharbat</div>
+      </div>
+      <button class="explore-link">Explore flavour <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+    </div>
+  </div>
+
 </section>
 
-<!-- The original About section has been removed as it's now placed above Flavours. 
-     You can keep the old one too if needed. -->
+<!-- ════════════════════════════════════
+     OUR STORY SECTION
+     ════════════════════════════════════ -->
+<div id="about">
+  <div class="story-timeline-bar"></div>
+  <div class="story-section">
 
+    <div class="story-hero">
+      <div class="story-hero-text reveal">
+        <p class="story-eyebrow">Est. 2012 · Chennai, India</p>
+        <h2 class="story-headline">Born from a<br><em>grandmother's</em><br>recipe.</h2>
+        <p class="story-lead">Mithas started in a 200 sq ft kitchen in Mylapore. No fancy machinery, no investors — just one family's obsession with making ice cream taste like it actually came from the fruit, the nut, the spice.</p>
+        <div class="story-founder-quote">
+          <blockquote>"We didn't set out to build a brand. We just refused to accept that Indian ice cream had to taste artificial."</blockquote>
+          <div class="story-founder-name">— Krishnah Iyengar, Founder</div>
+        </div>
+      </div>
+
+      <div class="story-stat-tower reveal">
+        <div class="story-stat-block">
+          <div class="story-stat-num">13+</div>
+          <div class="story-stat-label">Years of craft</div>
+          <div class="story-stat-accent">🕐</div>
+        </div>
+        <div class="story-stat-block">
+          <div class="story-stat-num">50+</div>
+          <div class="story-stat-label">Live flavours</div>
+          <div class="story-stat-accent">🍨</div>
+        </div>
+        <div class="story-stat-block">
+          <div class="story-stat-num">0</div>
+          <div class="story-stat-label">Artificial colours used</div>
+          <div class="story-stat-accent">🚫</div>
+        </div>
+        <div class="story-stat-block">
+          <div class="story-stat-num">28</div>
+          <div class="story-stat-label">Dairy partner farms</div>
+          <div class="story-stat-accent">🌾</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="story-milestones reveal">
+      <p class="milestones-eyebrow">The journey</p>
+      <div class="milestones-track">
+        <div class="milestone">
+          <div class="milestone-dot"></div>
+          <div class="milestone-year">2012</div>
+          <div class="milestone-title">Mylapore Kitchen</div>
+          <div class="milestone-desc">First batch of Kesar Pista sold at a local sabha canteen. Sold out in 40 minutes.</div>
+        </div>
+        <div class="milestone">
+          <div class="milestone-dot"></div>
+          <div class="milestone-year">2015</div>
+          <div class="milestone-title">First Storefront</div>
+          <div class="milestone-desc">Opened on Pondy Bazaar. Queue formed before the shutter went up on day one.</div>
+        </div>
+        <div class="milestone">
+          <div class="milestone-dot"></div>
+          <div class="milestone-year">2018</div>
+          <div class="milestone-title">Pan-India Delivery</div>
+          <div class="milestone-desc">Cracked cold-chain delivery to 40 cities. Alphonso Mango crossed 10,000 orders.</div>
+        </div>
+        <div class="milestone">
+          <div class="milestone-dot"></div>
+          <div class="milestone-year">2022</div>
+          <div class="milestone-title">50 Flavours</div>
+          <div class="milestone-desc">Launched the Royal Edition — Gulab Shahi, Zafrani Badam, and Thandai.</div>
+        </div>
+        <div class="milestone">
+          <div class="milestone-dot"></div>
+          <div class="milestone-year">Today</div>
+          <div class="milestone-title">Still Independent</div>
+          <div class="milestone-desc">No private equity. No artificial shortcuts. Same family. Same obsession.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="story-values">
+    <div class="value-card reveal">
+      <span class="value-icon">🥛</span>
+      <div class="value-title">Real Milk, Always</div>
+      <div class="value-desc">Full-fat milk sourced within 200 km of our facility, collected every morning before 6 AM. We've never used reconstituted milk powder.</div>
+    </div>
+    <div class="value-card reveal">
+      <span class="value-icon">🌿</span>
+      <div class="value-title">Nothing Artificial</div>
+      <div class="value-desc">No artificial colours. No synthetic flavour compounds. If a fruit isn't in season, that flavour doesn't exist on our menu.</div>
+    </div>
+    <div class="value-card reveal">
+      <span class="value-icon">🤝</span>
+      <div class="value-title">Farmer First</div>
+      <div class="value-desc">We pay above MSP to all 28 partner farms. Every mango, pistachio, and saffron thread comes with a face and a name behind it.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── Process ── -->
 <section class="process" id="process">
   <p class="section-eyebrow">How We Make It</p>
   <h2 class="section-title">Crafted Fresh, Every Morning</h2>
   <div class="process-steps">
-    <div class="process-step">
+    <div class="process-step reveal">
       <span class="step-num">01</span>
       <div class="step-title">Farm-Fresh Milk</div>
       <div class="step-desc">We collect full-fat milk daily from partner dairies within 200km of our facility.</div>
     </div>
-    <div class="process-step">
+    <div class="process-step reveal">
       <span class="step-num">02</span>
       <div class="step-title">Natural Infusion</div>
       <div class="step-desc">Real saffron strands, whole fruits, and roasted nuts are steeped overnight for depth.</div>
     </div>
-    <div class="process-step">
+    <div class="process-step reveal">
       <span class="step-num">03</span>
       <div class="step-title">Slow Churning</div>
       <div class="step-desc">Our churners run at low speed to create the dense, creamy texture Mithas is known for.</div>
     </div>
-    <div class="process-step">
+    <div class="process-step reveal">
       <span class="step-num">04</span>
       <div class="step-title">Flash Frozen</div>
       <div class="step-desc">Sealed and frozen within minutes to lock in freshness before reaching your home.</div>
@@ -304,23 +802,24 @@
   </div>
 </section>
 
+<!-- ── Testimonials ── -->
 <section class="testimonials">
   <p class="section-eyebrow">What People Say</p>
   <h2 class="section-title">Loved Across India</h2>
   <div class="testimonials-grid">
-    <div class="testimonial-card">
+    <div class="testimonial-card reveal">
       <div class="stars">★★★★★</div>
       <p class="testimonial-text">"The Kesar Pista is unlike anything I've had — you can actually taste the saffron. Not a hint of artificial flavour."</p>
       <div class="testimonial-author">Priya Nair</div>
       <div class="testimonial-location">Mumbai</div>
     </div>
-    <div class="testimonial-card">
+    <div class="testimonial-card reveal">
       <div class="stars">★★★★★</div>
       <p class="testimonial-text">"Ordered the Alphonso Mango for my daughter's birthday. The whole family was surprised — it tasted like fresh mangoes, not syrup."</p>
       <div class="testimonial-author">Rajesh Menon</div>
       <div class="testimonial-location">Bangalore</div>
     </div>
-    <div class="testimonial-card">
+    <div class="testimonial-card reveal">
       <div class="stars">★★★★★</div>
       <p class="testimonial-text">"The dark chocolate is dangerously good. Dense, complex, and not cloyingly sweet. My new weakness."</p>
       <div class="testimonial-author">Ananya Shah</div>
@@ -329,6 +828,16 @@
   </div>
 </section>
 
+<!-- FIX: added id="stores" so the nav "Find Us" anchor works -->
+<section class="cta-banner" id="stores">
+  <p class="section-eyebrow">Find Your Nearest Scoop</p>
+  <h2 class="section-title">Available in 40+ Cities</h2>
+  <p class="cta-sub">Walk into any of our stores, or order pan-India delivery right to your door.</p>
+  <button class="cta-btn">Find a Store Near Me</button>
+  <button class="cta-btn-outline">Order Online</button>
+</section>
+
+<!-- ── Footer ── -->
 <footer>
   <div class="footer-grid">
     <div>
@@ -370,6 +879,57 @@
     <div>© 2025 Thirupura Krishnah Dairy Pvt Ltd. All rights reserved.</div>
   </div>
 </footer>
+
+<script>
+  /* ── Hamburger / mobile menu ── */
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  hamburger.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    // FIX: update aria-expanded so screen readers announce state
+    hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+
+  function closeMobileMenu() {
+    mobileMenu.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+  }
+
+  document.addEventListener('click', (e) => {
+    if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
+      closeMobileMenu();
+    }
+  });
+
+  /* ── FIX: Scroll reveal via IntersectionObserver ── */
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  /* ── FIX: Active nav link on scroll ── */
+  const sections = document.querySelectorAll('section[id], div[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => link.classList.remove('active'));
+        const activeLink = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
+        if (activeLink) activeLink.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+
+  sections.forEach(section => navObserver.observe(section));
+</script>
 
 </body>
 </html>
