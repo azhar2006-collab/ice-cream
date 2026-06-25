@@ -1,0 +1,375 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mithas – More Than Ice Cream</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #0D1F5C;
+    --gold: #e99e12;
+    --cream: #a19075;
+    --beige: #e6cfa4;
+    --beige-mid: #EAD9C0;
+    --beige-card: #F7F0E4;
+    --red: #D43229;
+    --text: #131111;
+    --muted: #6b6b6b;
+    --white: #ffffff;
+  }
+  body { font-family: "Inter", sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+  nav { background: var(--navy); padding: 0 48px; display: flex; align-items: center; justify-content: space-between; height: 64px; position: sticky; top: 0; z-index: 100; }
+  .nav-logo { color: white; font-family: "Playfair Display", serif; font-size: 1.5rem; font-weight: 700; }
+  .nav-logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.5px; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta { background: var(--gold); color: white; border: none; padding: 10px 22px; border-radius: 32px; font-size: 0.875rem; font-weight: 500; cursor: pointer; font-family: "Inter", sans-serif; transition: background 0.2s; }
+  .nav-cta:hover { background: #b07d20; }
+  .hero { width: 100%; overflow: hidden; }
+  .hero img { width: 100%; display: block; max-height: 620px; object-fit: cover; object-position: center; }
+  .marquee-strip { background: var(--navy); padding: 14px 0; overflow: hidden; white-space: nowrap; }
+  .marquee-inner { display: inline-block; animation: marquee 22s linear infinite; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 500; color: var(--gold); }
+  .marquee-inner span { margin: 0 40px; color: rgba(255,255,255,0.4); }
+  @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+  section { padding: 80px 48px; }
+  .section-eyebrow { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 12px; }
+  .section-title { font-family: "Playfair Display", serif; font-size: 2.8rem; font-weight: 700; line-height: 1.15; color: var(--navy); max-width: 560px; margin-bottom: 20px; }
+  .section-body { font-size: 1rem; color: var(--muted); line-height: 1.8; max-width: 520px; }
+
+  /* Company Info Section */
+  .company-info {
+    background: var(--cream);
+    border-bottom: 1px solid var(--beige-mid);
+  }
+  .company-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .company-details {
+    font-size: 0.95rem;
+    line-height: 1.8;
+  }
+  .company-details h3 {
+    font-family: "Playfair Display", serif;
+    font-size: 1.6rem;
+    color: var(--navy);
+    margin-bottom: 16px;
+  }
+  .company-details p {
+    margin-bottom: 8px;
+    color: var(--muted);
+  }
+  .highlight { color: var(--navy); font-weight: 500; }
+
+  /* Flavours Section */
+  .flavours { background: var(--beige); }
+  .flavours-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 62px; flex-wrap: wrap; gap: 16px; }
+  .flavours-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
+
+  .flavour-card {
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    background: var(--beige-card);
+    border: 1px solid var(--beige-mid);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .flavour-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+  }
+
+  .flavour-card-img {
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+    position: relative;
+    background: var(--beige-mid);
+  }
+  .flavour-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+  .flavour-card:hover .flavour-card-img img {
+    transform: scale(1.05);
+  }
+  .flavour-card-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.18) 0%, transparent 55%);
+    pointer-events: none;
+  }
+
+  .flavour-info {
+    padding: 20px;
+    background: var(--beige-card);
+    border-top: 1px solid var(--beige-mid);
+  }
+  .flavour-name { font-family: "Playfair Display", serif; font-size: 1.15rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .flavour-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+  .flavour-tag {
+    display: inline-block;
+    margin-top: 10px;
+    background: var(--beige-mid);
+    color: var(--navy);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid #d4c4a8;
+  }
+
+  /* Rest of sections remain the same */
+  .about { background: var(--cream); display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .about-visual { background: var(--navy); border-radius: 24px; height: 480px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 20px; }
+  .about-stats-row { display: flex; gap: 16px; }
+  .about-stat { background: rgba(255,255,255,0.1); border-radius: 12px; padding: 16px 24px; text-align: center; color: white; }
+  .about-stat-num { font-family: "Playfair Display", serif; font-size: 2.2rem; font-weight: 900; color: var(--gold); display: block; }
+  .about-stat-label { font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase; opacity: 0.6; }
+  .process { background: var(--navy); color: white; }
+  .process .section-title { color: white; }
+  .process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; margin-top: 52px; }
+  .process-step { padding: 28px 20px; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; }
+  .step-num { font-family: "Playfair Display", serif; font-size: 2.8rem; font-weight: 900; color: var(--gold); opacity: 0.35; display: block; margin-bottom: 14px; }
+  .step-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 8px; color: white; }
+  .step-desc { font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.7; }
+  .testimonials { background: var(--white); }
+  .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+  .testimonial-card { background: var(--cream); border-radius: 20px; padding: 32px 28px; border: 1px solid #efe8da; }
+  .stars { color: var(--gold); font-size: 1rem; margin-bottom: 16px; }
+  .testimonial-text { font-size: 0.93rem; line-height: 1.75; color: var(--text); margin-bottom: 20px; font-style: italic; }
+  .testimonial-author { font-weight: 600; font-size: 0.85rem; color: var(--navy); }
+  .testimonial-location { font-size: 0.78rem; color: var(--muted); }
+  .cta-banner { background: var(--red); text-align: center; padding: 80px 48px; color: white; }
+  .cta-banner .section-title { color: white; max-width: 680px; margin: 0 auto 12px; }
+  .cta-banner .section-eyebrow { color: rgba(255,255,255,0.7); }
+  .cta-sub { color: rgba(255,255,255,0.75); font-size: 1rem; margin-bottom: 36px; }
+  .cta-btn { background: white; color: var(--red); border: none; padding: 16px 40px; border-radius: 40px; font-size: 1rem; font-weight: 600; cursor: pointer; font-family: "Inter", sans-serif; margin: 0 8px; transition: transform 0.2s; }
+  .cta-btn:hover { transform: scale(1.03); }
+  .cta-btn-outline { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.5); padding: 14px 40px; border-radius: 40px; font-size: 1rem; font-weight: 500; cursor: pointer; font-family: "Inter", sans-serif; margin: 0 8px; transition: border-color 0.2s; }
+  .cta-btn-outline:hover { border-color: white; }
+  footer { background: #060e2e; color: rgba(255,255,255,0.6); padding: 60px 48px 32px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+  .footer-brand { font-family: "Playfair Display", serif; font-size: 1.4rem; color: white; margin-bottom: 10px; }
+  .footer-tagline { font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+  .footer-desc { font-size: 0.83rem; line-height: 1.7; }
+  .footer-col-title { font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase; color: white; font-weight: 600; margin-bottom: 18px; }
+  .footer-links { list-style: none; }
+  .footer-links li { margin-bottom: 10px; }
+  .footer-links a { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.83rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; font-size: 0.76rem; }
+  .footer-bottom-logo { color: white; font-family: "Playfair Display", serif; font-size: 1rem; }
+  @media (max-width: 900px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    section { padding: 52px 20px; }
+    .company-grid, .about { grid-template-columns: 1fr; gap: 32px; }
+    .process-steps { grid-template-columns: 1fr 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .section-title { font-size: 2rem; }
+    .about-visual { height: 300px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Mithas<span>™</span></div>
+  <ul class="nav-links">
+    <li><a href="#flavours">Flavours</a></li>
+    <li><a href="#about">Our Story</a></li>
+    <li><a href="#process">Craftsmanship</a></li>
+    <li><a href="#stores">Find Us</a></li>
+  </ul>
+  <button class="nav-cta">Order Now</button>
+</nav>
+
+<div class="hero">
+  <img src="mithas_hero_banner.png" alt="Mithas ice cream – Kesar Pista, Mango, and Chocolate served in premium glass bowls and waffle cones">
+</div>
+
+<div class="marquee-strip">
+  <div class="marquee-inner">
+    Made with Real Milk <span>✦</span> No Artificial Colours <span>✦</span> 50+ Flavours <span>✦</span> Pan India Delivery <span>✦</span> Premium Quality <span>✦</span> Cold-Pressed Ingredients <span>✦</span>
+    Made with Real Milk <span>✦</span> No Artificial Colours <span>✦</span> 50+ Flavours <span>✦</span> Pan India Delivery <span>✦</span> Premium Quality <span>✦</span> Cold-Pressed Ingredients <span>✦</span>
+  </div>
+</div>
+
+
+<section class="flavours" id="flavours">
+  <div class="flavours-header">
+    <div>
+      <p class="section-eyebrow">Our Collection</p>
+      <h2 class="section-title">Flavours Rooted in India</h2>
+      <p class="section-body">Every scoop tells a story — of saffron fields in Kashmir, mango orchards in Alphonso country, and the finest pistachios from the hills.</p>
+    </div>
+    <button class="nav-cta">View All Flavours</button>
+  </div>
+  <div class="flavours-grid">
+
+    <!-- Kesar Pista -->
+    <div class="flavour-card">
+      <div class="flavour-card-img">
+        <img src="images.jpg" alt="Kesar Pista ice cream – saffron and pistachio scoops in premium bowl">
+      </div>
+      <div class="flavour-info">
+        <div class="flavour-name">Kesar Pista</div>
+        <div class="flavour-desc">Saffron-infused cream swirled with roasted pistachios </div>
+        <div class="flavour-tag">Signature</div>
+      </div>
+    </div>
+
+    
+    <!-- Dark Chocolate -->
+    <div class="flavour-card">
+      <div class="flavour-card-img">
+        <img src="images (1).jpg" alt="Rich Belgian dark chocolate ice cream with chocolate shards">
+      </div>
+      <div class="flavour-info">
+        <div class="flavour-name">Dark Chocolate</div>
+        <div class="flavour-desc">Belgian dark chocolate with chocolate chip clusters </div>
+        <div class="flavour-tag">Bestseller</div>
+      </div>
+    </div>
+    <!-- Alphonso Mango -->
+    <div class="flavour-card">
+      <div class="flavour-card-img">
+        <img src="images (3).jpg" alt="Alphonso Mango ice cream – vibrant golden scoop with fresh mango">
+      </div>
+      <div class="flavour-info">
+        <div class="flavour-name">Alphonso Mango</div>
+        <div class="flavour-desc">Pure Alphonso mangoes .</div>
+        <div class="flavour-tag">Seasonal</div>
+      </div>
+    </div>
+
+
+    <!-- Gulab Shahi -->
+    <div class="flavour-card">
+      <div class="flavour-card-img">
+        <img src="images (4).jpg" alt="Gulab Shahi rose and cardamom ice cream with rose petals">
+      </div>
+      <div class="flavour-info">
+        <div class="flavour-name">Gulab Shahi</div>
+        <div class="flavour-desc">Rose petals and cardamom in silky milk </div>
+        <div class="flavour-tag">Royal Edition</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- The original About section has been removed as it's now placed above Flavours. 
+     You can keep the old one too if needed. -->
+
+<section class="process" id="process">
+  <p class="section-eyebrow">How We Make It</p>
+  <h2 class="section-title">Crafted Fresh, Every Morning</h2>
+  <div class="process-steps">
+    <div class="process-step">
+      <span class="step-num">01</span>
+      <div class="step-title">Farm-Fresh Milk</div>
+      <div class="step-desc">We collect full-fat milk daily from partner dairies within 200km of our facility.</div>
+    </div>
+    <div class="process-step">
+      <span class="step-num">02</span>
+      <div class="step-title">Natural Infusion</div>
+      <div class="step-desc">Real saffron strands, whole fruits, and roasted nuts are steeped overnight for depth.</div>
+    </div>
+    <div class="process-step">
+      <span class="step-num">03</span>
+      <div class="step-title">Slow Churning</div>
+      <div class="step-desc">Our churners run at low speed to create the dense, creamy texture Mithas is known for.</div>
+    </div>
+    <div class="process-step">
+      <span class="step-num">04</span>
+      <div class="step-title">Flash Frozen</div>
+      <div class="step-desc">Sealed and frozen within minutes to lock in freshness before reaching your home.</div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials">
+  <p class="section-eyebrow">What People Say</p>
+  <h2 class="section-title">Loved Across India</h2>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"The Kesar Pista is unlike anything I've had — you can actually taste the saffron. Not a hint of artificial flavour."</p>
+      <div class="testimonial-author">Priya Nair</div>
+      <div class="testimonial-location">Mumbai</div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"Ordered the Alphonso Mango for my daughter's birthday. The whole family was surprised — it tasted like fresh mangoes, not syrup."</p>
+      <div class="testimonial-author">Rajesh Menon</div>
+      <div class="testimonial-location">Bangalore</div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"The dark chocolate is dangerously good. Dense, complex, and not cloyingly sweet. My new weakness."</p>
+      <div class="testimonial-author">Ananya Shah</div>
+      <div class="testimonial-location">Delhi</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">Mithas™</div>
+      <div class="footer-tagline">More Than Ice Cream</div>
+      <div class="footer-desc">Premium Indian ice cream made with real ingredients, no artificial colours, and a whole lot of love since 2012.</div>
+    </div>
+    <div>
+      <div class="footer-col-title">Flavours</div>
+      <ul class="footer-links">
+        <li><a href="#">Kesar Pista</a></li>
+        <li><a href="#">Alphonso Mango</a></li>
+        <li><a href="#">Dark Chocolate</a></li>
+        <li><a href="#">Gulab Shahi</a></li>
+        <li><a href="#">View All</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <ul class="footer-links">
+        <li><a href="#">Our Story</a></li>
+        <li><a href="#">Sustainability</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Connect</div>
+      <ul class="footer-links">
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Facebook</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">Distributor Enquiry</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-bottom-logo">Mithas™</div>
+    <div>© 2025 Thirupura Krishnah Dairy Pvt Ltd. All rights reserved.</div>
+  </div>
+</footer>
+
+</body>
+</html>
